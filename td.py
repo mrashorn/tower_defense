@@ -1,5 +1,6 @@
 import sys
 import pygame
+from settings import Settings
 
 class TowerDefense:
     """Overall class to manage assets and behavior"""
@@ -7,11 +8,14 @@ class TowerDefense:
     def __init__(self):
         """Initialize the game and create game resources."""
         pygame.init()
+        
+        # Go get the settings
+        self.settings = Settings()
 
-        self.screen = pygame.display.set_mode((1200, 800))
+        self.screen = pygame.display.set_mode((
+            self.settings.screen_width, self.settings.screen_height))
         pygame.display.set_caption("Tower Defense")
 
-        self.bg_color = (0, 0, 0)
 
 
     def run_game(self):
@@ -30,7 +34,7 @@ class TowerDefense:
     
     def _update_screen(self):
         """Update images on screen, flip to new screen."""
-        self.screen.fill(self.bg_color)
+        self.screen.fill(self.settings.bg_color)
 
         pygame.display.flip()
 
