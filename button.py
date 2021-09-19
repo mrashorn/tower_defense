@@ -21,6 +21,9 @@ class Button:
         # The button message needs to be prepped once.
         self._prep_msg(msg)
 
+        # Button's on/off toggle status
+        self.toggle_status = False # by the default the button is not on.
+
 
     def _prep_msg(self, msg):
         """Turn the message into a rendered image and center the text on the button."""
@@ -33,3 +36,12 @@ class Button:
         """Draw a blank button then draw the message."""
         self.screen.fill(self.button_color, self.rect)
         self.screen.blit(self.msg_image, self.msg_image_rect)
+
+
+    def toggle_button(self):
+        """Toggle the button on or off."""
+        if self.toggle_status == False:
+            self.toggle_status = True
+        else:
+            self.toggle_status = False
+

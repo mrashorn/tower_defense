@@ -12,6 +12,7 @@ class TowerDefense:
         
         # Go get the settings
         self.settings = Settings()
+        
 
         self.screen = pygame.display.set_mode((
             self.settings.screen_width, self.settings.screen_height))
@@ -39,6 +40,18 @@ class TowerDefense:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = pygame.mouse.get_pos()
+                self._check_button_clicked(mouse_pos)
+
+
+    def _check_button_clicked(self, mouse_pos):
+        """Check if the mouse clicked any of the game's buttons."""
+        new_tower_clicked = self.build_tower_button.rect.collidepoint(mouse_pos)
+        if new_tower_clicked:
+            self.build_tower_button.toggle_button()
+            print("Build Tower: " + str(self.build_tower_button.toggle_status))
+
 
     
     def _update_screen(self):
