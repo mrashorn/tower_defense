@@ -9,3 +9,5 @@ class Settings:
         self.screen_width = 1300 # Leave extra border space for game buttons
         self.screen_height = 900
         self.bg_color = (0, 0, 0)
+
+

@@ -1,9 +1,9 @@
-import pygame.font
+import pygame
 
 class Button:
     """Class to handle any selections the player wants to make during the game."""
 
-    def __init__(self, td_game, msg):
+    def __init__(self, td_game):
         """Initialize button attributes."""
         self.screen = td_game.screen
         self.screen_rect = self.screen.get_rect()
@@ -29,6 +29,7 @@ class Button:
         if self.toggle_status == False:
             self.toggle_status = True
             self.image = pygame.image.load('images/build_tower_pressed.bmp')
+
         else:
             self.toggle_status = False
             self.image = pygame.image.load('images/build_tower_unpressed.bmp')

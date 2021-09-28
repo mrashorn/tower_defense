@@ -23,7 +23,10 @@ class TowerDefense:
         self.map_rect = self.map_image.get_rect()
 
         # Create the first build tower button
-        self.build_tower_button = Button(self, "Build Tower")
+        self.build_tower_button = Button(self)
+
+        # Initialize various game modes
+        self.build_tower_mode = False
 
 
 
@@ -42,16 +45,24 @@ class TowerDefense:
                 sys.exit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
+                if self.build_tower_mode == True:
+                    print(mouse_pos) # do something with this later
                 self._check_button_clicked(mouse_pos)
-
-
+                
     def _check_button_clicked(self, mouse_pos):
         """Check if the mouse clicked any of the game's buttons."""
         new_tower_clicked = self.build_tower_button.rect.collidepoint(mouse_pos)
         if new_tower_clicked:
             self.build_tower_button.toggle_button()
-            print("Build Tower: " + str(self.build_tower_button.toggle_status))
+            self._toggle_mode()
 
+
+    def _toggle_mode(self):
+        """toggle the new mode that we just entered."""
+        if self.build_tower_button.toggle_status == True:
+            self.build_tower_mode = True
+        else:
+            self.build_tower_mode = False
 
     
     def _update_screen(self):
