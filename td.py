@@ -2,6 +2,7 @@ import sys
 import pygame
 from settings import Settings
 from button import Button
+from tower import Tower
 
 class TowerDefense:
     """Overall class to manage assets and behavior"""
@@ -29,6 +30,9 @@ class TowerDefense:
         # Initialize various game modes
         self.build_tower_mode = False
 
+        # Create the various sprite groups of the game
+        self.towers = pygame.sprite.Group()
+
 
 
 
@@ -46,10 +50,23 @@ class TowerDefense:
                 sys.exit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
+                # check what mode we are in mode = check_mode(self)
+                # if mode = build tower
+                      # build tower functions (mouse pos)
+                # if mode = live round mode
+                    # clicking during live round (mouse pos)
                 self._check_button_clicked(mouse_pos)
                 if not self.button_clicked:
                     if self.build_tower_mode == True:
-                        print(mouse_pos) # do something with this later
+                        self._build_tower(mouse_pos)
+
+
+    def _build_tower(self, mouse_pos):
+        """Build a tower where the user clicked."""
+        tower = Tower(self, mouse_pos)
+        self.towers.add(tower)
+        
+                        
                 
     def _check_button_clicked(self, mouse_pos):
         """Check if the mouse clicked any of the game's buttons."""
@@ -76,6 +93,8 @@ class TowerDefense:
         # Draw the map
         self.screen.blit(self.map_image, self.map_rect)
         self.build_tower_button.draw_button() # eventually probably have a function that draws all buttons.
+
+        self.towers.draw(self.screen)
 
 
         pygame.display.flip()
