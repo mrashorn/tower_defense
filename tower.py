@@ -15,8 +15,7 @@ class Tower(Sprite):
         self.rect = self.image.get_rect()
 
         # Assign the tower it's location
-        self.rect.x = mouse_pos[0]
-        self.rect.y = mouse_pos[1]
+        self.rect.center = mouse_pos
 
 
 

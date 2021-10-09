@@ -80,6 +80,8 @@ class TowerDefense:
     def _check_pixel_color(self, mouse_pos):
         """Check the color of the pixel to see if a tower can be placed there."""
         pixel_color = self.screen.get_at((mouse_pos[0], mouse_pos[1]))
+
+        # Check for green color
         if pixel_color[0] < 110 and pixel_color [1] > 90:
             return True
 
