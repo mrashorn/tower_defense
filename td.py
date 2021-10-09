@@ -55,24 +55,45 @@ class TowerDefense:
                       # build tower functions (mouse pos)
                 # if mode = live round mode
                     # clicking during live round (mouse pos)
+                
+                # If we just clicked a button, don't do anything except exit the mode
                 self._check_button_clicked(mouse_pos)
-                if not self.button_clicked:
-                    if self.build_tower_mode == True:
-                        self._build_tower(mouse_pos)
+                if self.button_clicked:
+                    continue
+
+
+                if self.build_tower_mode == True:
+                    self._build_tower(mouse_pos)
 
 
     def _build_tower(self, mouse_pos):
         """Build a tower where the user clicked."""
         tower = Tower(self, mouse_pos)
-        self.towers.add(tower)
+        
+        # Check to make sure tower can only be built on grass.
+        grass = self._check_pixel_color(mouse_pos)
+
+        if grass:
+            self.towers.add(tower)
+
+
+    def _check_pixel_color(self, mouse_pos):
+        """Check the color of the pixel to see if a tower can be placed there."""
+        pixel_color = self.screen.get_at((mouse_pos[0], mouse_pos[1]))
+        if pixel_color[0] < 110 and pixel_color [1] > 90:
+            return True
+
         
                         
                 
     def _check_button_clicked(self, mouse_pos):
         """Check if the mouse clicked any of the game's buttons."""
         self.button_clicked = False # Reset the button check before we check for buttons
+
+        # Check which button we clicked.
         new_tower_clicked = self.build_tower_button.rect.collidepoint(mouse_pos)
         
+        # Carry out the button functions depending on which button was clicked.
         if new_tower_clicked:
             self.build_tower_button.toggle_button()
             self._toggle_mode()
