@@ -33,6 +33,10 @@ class TowerDefense:
         # Create the various sprite groups of the game
         self.towers = pygame.sprite.Group()
 
+        # Load the tower image one time.
+        self.basic_tower_image = pygame.image.load("images/basic_tower.bmp")
+        self.basic_tower_rect = self.basic_tower_image.get_rect()
+
 
 
 
@@ -41,7 +45,7 @@ class TowerDefense:
         while True:
             self._check_events()
             self._update_screen()
-
+            
 
     def _check_events(self):
         """Respond to keyboard and mouse presses."""
@@ -69,7 +73,7 @@ class TowerDefense:
     def _build_tower(self, mouse_pos):
         """Build a tower where the user clicked."""
         tower = Tower(self, mouse_pos)
-        
+
         # Check to make sure tower can only be built on grass.
         grass = self._check_pixel_color(mouse_pos)
 
@@ -85,8 +89,13 @@ class TowerDefense:
         if pixel_color[0] < 110 and pixel_color [1] > 90:
             return True
 
-        
-                        
+
+    def _display_tower(self):
+        """Display the selected tower as the mouse is moved around."""
+        mouse_pos = pygame.mouse.get_pos()
+        self.basic_tower_rect.center = mouse_pos
+        self.screen.blit(self.basic_tower_image, self.basic_tower_rect)
+       
                 
     def _check_button_clicked(self, mouse_pos):
         """Check if the mouse clicked any of the game's buttons."""
@@ -118,6 +127,9 @@ class TowerDefense:
         self.build_tower_button.draw_button() # eventually probably have a function that draws all buttons.
 
         self.towers.draw(self.screen)
+
+        if self.build_tower_mode == True:
+            self._display_tower()
 
 
         pygame.display.flip()
