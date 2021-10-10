@@ -3,6 +3,7 @@ import pygame
 from settings import Settings
 from button import Button
 from tower import Tower
+from tower_hovers import Tower_Hovers
 
 class TowerDefense:
     """Overall class to manage assets and behavior"""
@@ -33,9 +34,8 @@ class TowerDefense:
         # Create the various sprite groups of the game
         self.towers = pygame.sprite.Group()
 
-        # Load the tower image one time.
-        self.basic_tower_image = pygame.image.load("images/basic_tower.bmp")
-        self.basic_tower_rect = self.basic_tower_image.get_rect()
+        # Go get the tower hover images
+        self.tower_hovers = Tower_Hovers()
 
 
 
@@ -83,7 +83,7 @@ class TowerDefense:
 
     def _check_pixel_color(self, mouse_pos):
         """Check the color of the pixel to see if a tower can be placed there."""
-        pixel_color = self.screen.get_at((mouse_pos[0], mouse_pos[1]))
+        pixel_color = self.map_image.get_at((mouse_pos[0], mouse_pos[1]))
 
         # Check for green color
         if pixel_color[0] < 110 and pixel_color [1] > 90:
@@ -93,8 +93,8 @@ class TowerDefense:
     def _display_tower(self):
         """Display the selected tower as the mouse is moved around."""
         mouse_pos = pygame.mouse.get_pos()
-        self.basic_tower_rect.center = mouse_pos
-        self.screen.blit(self.basic_tower_image, self.basic_tower_rect)
+        self.tower_hovers.basic_tower_rect.center = mouse_pos
+        self.screen.blit(self.tower_hovers.basic_tower_image, self.tower_hovers.basic_tower_rect)
        
                 
     def _check_button_clicked(self, mouse_pos):
