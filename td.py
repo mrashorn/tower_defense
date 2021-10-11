@@ -83,11 +83,19 @@ class TowerDefense:
 
     def _check_pixel_color(self, mouse_pos):
         """Check the color of the pixel to see if a tower can be placed there."""
-        pixel_color = self.map_image.get_at((mouse_pos[0], mouse_pos[1]))
+
+        # If mouse is outside bounds of map, check the screen. 
+        if mouse_pos[0] > 1175 or mouse_pos[1] > 775:
+            pixel_color = self.screen.get_at((mouse_pos[0], mouse_pos[1]))
+
+        else:        
+            # If mouse is within bounds of map:
+            pixel_color = self.map_image.get_at((mouse_pos[0], mouse_pos[1]))
 
         # Check for green color
         if pixel_color[0] < 110 and pixel_color [1] > 90:
             return True
+    
 
 
     def _display_tower(self):
@@ -95,6 +103,11 @@ class TowerDefense:
         mouse_pos = pygame.mouse.get_pos()
         self.tower_hovers.basic_tower_rect.center = mouse_pos
         self.screen.blit(self.tower_hovers.basic_tower_image, self.tower_hovers.basic_tower_rect)
+
+        # If grass, change color of tower hover to green.
+        grass = self._check_pixel_color(mouse_pos)
+        if grass:
+            print("Grass! Can build here.")
        
                 
     def _check_button_clicked(self, mouse_pos):
