@@ -102,13 +102,29 @@ class TowerDefense:
         """Display the selected tower as the mouse is moved around."""
         mouse_pos = pygame.mouse.get_pos()
         self.tower_hovers.basic_tower_rect.center = mouse_pos
-        self.screen.blit(self.tower_hovers.basic_tower_image, self.tower_hovers.basic_tower_rect)
 
         # If grass, change color of tower hover to green.
         grass = self._check_pixel_color(mouse_pos)
         if grass:
             print("Grass! Can build here.")
-       
+            # Change the color of the displayed tower to green. 
+            self._make_green(self.tower_hovers.basic_tower_image)
+        else:
+            print("Not grass!")
+            # Change the color back to normal or to red!
+            
+            
+        self.screen.blit(self.tower_hovers.basic_tower_image, self.tower_hovers.basic_tower_rect)
+
+    def _make_green(self, tower_image):
+        """Add a green tint to the hovered tower image."""
+        w, h = tower_image.get_size()
+        for x in range(w):
+            for y in range(h):
+                pixel_color = tower_image.get_at((x,y))
+                if  pixel_color != (255, 255, 255, 255): # anything but the background of the image
+                    tower_image.set_at((x,y), pygame.Color(0, 250, 0))
+
                 
     def _check_button_clicked(self, mouse_pos):
         """Check if the mouse clicked any of the game's buttons."""
