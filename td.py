@@ -75,7 +75,11 @@ class TowerDefense:
         tower = Tower(self, mouse_pos)
 
         # Check to make sure tower can only be built on grass.
-        grass = self._check_pixel_color(mouse_pos)
+         
+        if mouse_pos[0] < 1175 or mouse_pos[1] < 775:
+            grass = self._check_pixel_color(mouse_pos)
+        else:
+            grass = False
 
         if grass:
             self.towers.add(tower)
@@ -83,14 +87,7 @@ class TowerDefense:
 
     def _check_pixel_color(self, mouse_pos):
         """Check the color of the pixel to see if a tower can be placed there."""
-
-        # If mouse is outside bounds of map, check the screen. 
-        if mouse_pos[0] > 1175 or mouse_pos[1] > 775:
-            pixel_color = self.screen.get_at((mouse_pos[0], mouse_pos[1]))
-
-        else:        
-            # If mouse is within bounds of map:
-            pixel_color = self.map_image.get_at((mouse_pos[0], mouse_pos[1]))
+        pixel_color = self.map_image.get_at((mouse_pos[0], mouse_pos[1]))
 
         # Check for green color
         if pixel_color[0] < 110 and pixel_color [1] > 90:
@@ -103,16 +100,22 @@ class TowerDefense:
         mouse_pos = pygame.mouse.get_pos()
         self.tower_hovers.basic_tower_rect.center = mouse_pos
 
-        # If grass, change color of tower hover to green.
-        grass = self._check_pixel_color(mouse_pos)
+        # if mouse outside map, grass = F
+        # If mouse is outside bounds of map, check the screen. 
+        if mouse_pos[0] > 1175 or mouse_pos[1] > 775:
+            grass = False
+        else:
+            # If grass, change color of tower hover to green.
+            grass = self._check_pixel_color(mouse_pos)
+
         if grass:
-            print("Grass! Can build here.")
+            # Can build here
             # Change the color of the displayed tower to green. 
             self._make_green(self.tower_hovers.basic_tower_image)
         else:
-            print("Not grass!")
+            # Not Grass
             # Change the color back to normal or to red!
-            
+            self._make_red(self.tower_hovers.basic_tower_image)            
             
         self.screen.blit(self.tower_hovers.basic_tower_image, self.tower_hovers.basic_tower_rect)
 
@@ -124,6 +127,17 @@ class TowerDefense:
                 pixel_color = tower_image.get_at((x,y))
                 if  pixel_color != (255, 255, 255, 255): # anything but the background of the image
                     tower_image.set_at((x,y), pygame.Color(0, 250, 0))
+
+
+    def _make_red(self, tower_image):
+        """Add a red tint to the hovered tower image."""
+        w, h = tower_image.get_size()
+        for x in range(w):
+            for y in range(h):
+                pixel_color = tower_image.get_at((x,y))
+                if pixel_color != (255, 255, 255, 255): # anything but the background of the image
+                    tower_image.set_at((x,y), pygame.Color(250, 0, 0))
+
 
                 
     def _check_button_clicked(self, mouse_pos):
