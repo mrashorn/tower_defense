@@ -11,3 +11,7 @@ class Settings:
         self.bg_color = (0, 0, 0)
 
 
+        # Tower settings
+        self.basic_tower_range = 125
+
+

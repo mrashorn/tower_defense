@@ -24,6 +24,13 @@ class TowerDefense:
         self.map_image = pygame.image.load('images/map.bmp')
         self.map_rect = self.map_image.get_rect()
 
+        # Create a transparent surface across the entire map
+        # That we can display tower ranges and other transparent objects on.
+        self.range_surface = pygame.Surface((self.settings.screen_width,
+            self.settings.screen_height))
+        self.range_surface.set_alpha(128)
+        self.range_surface_rect = self.range_surface.get_rect()
+
         # Create the first build tower button
         self.build_tower_button = Button(self)
         self.button_clicked = False # Was a button just clicked?
@@ -76,7 +83,7 @@ class TowerDefense:
 
         # Check to make sure tower can only be built on grass.
          
-        if mouse_pos[0] < 1175 or mouse_pos[1] < 775:
+        if mouse_pos[0] < 1175 and mouse_pos[1] < 775:
             grass = self._check_pixel_color(mouse_pos)
         else:
             grass = False
@@ -118,6 +125,14 @@ class TowerDefense:
             self._make_red(self.tower_hovers.basic_tower_image)            
             
         self.screen.blit(self.tower_hovers.basic_tower_image, self.tower_hovers.basic_tower_rect)
+        self._display_tower_range(mouse_pos)
+
+        
+    def _display_tower_range(self, mouse_pos):
+        """Display the range of the tower as you try to place it on map."""
+        pygame.draw.circle(self.range_surface, (240, 240, 240), mouse_pos, self.settings.basic_tower_range)
+
+
 
     def _make_green(self, tower_image):
         """Add a green tint to the hovered tower image."""
@@ -164,6 +179,7 @@ class TowerDefense:
     
     def _update_screen(self):
         """Update images on screen, flip to new screen."""
+
         self.screen.fill(self.settings.bg_color) # can remove once the map is done
         # Draw the map
         self.screen.blit(self.map_image, self.map_rect)
@@ -171,8 +187,11 @@ class TowerDefense:
 
         self.towers.draw(self.screen)
 
+        self.screen.blit(self.range_surface, self.range_surface_rect)
+
         if self.build_tower_mode == True:
             self._display_tower()
+            
 
 
         pygame.display.flip()

@@ -17,5 +17,8 @@ class Tower(Sprite):
         # Assign the tower it's location
         self.rect.center = mouse_pos
 
+        # Basic Tower's attributes / settings
+        self.range = 100
+
 
 
