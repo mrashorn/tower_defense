@@ -24,13 +24,6 @@ class TowerDefense:
         self.map_image = pygame.image.load('images/map.bmp')
         self.map_rect = self.map_image.get_rect()
 
-        # Create a transparent surface across the entire map
-        # That we can display tower ranges and other transparent objects on.
-        self.range_surface = pygame.Surface((self.settings.screen_width,
-            self.settings.screen_height))
-        self.range_surface.set_alpha(128)
-        self.range_surface_rect = self.range_surface.get_rect()
-
         # Create the first build tower button
         self.build_tower_button = Button(self)
         self.button_clicked = False # Was a button just clicked?
@@ -130,7 +123,8 @@ class TowerDefense:
         
     def _display_tower_range(self, mouse_pos):
         """Display the range of the tower as you try to place it on map."""
-        pygame.draw.circle(self.range_surface, (240, 240, 240), mouse_pos, self.settings.basic_tower_range)
+        tower = Tower(self, mouse_pos)
+        pygame.draw.circle(self.screen, (255, 255, 255), mouse_pos, tower.range, width=1)
 
 
 
@@ -186,8 +180,6 @@ class TowerDefense:
         self.build_tower_button.draw_button() # eventually probably have a function that draws all buttons.
 
         self.towers.draw(self.screen)
-
-        self.screen.blit(self.range_surface, self.range_surface_rect)
 
         if self.build_tower_mode == True:
             self._display_tower()
