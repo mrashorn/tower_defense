@@ -30,6 +30,7 @@ class TowerDefense:
 
         # Initialize various game modes
         self.build_tower_mode = False
+        self.pre_round_mode = True
 
         # Create the various sprite groups of the game
         self.towers = pygame.sprite.Group()
@@ -167,8 +168,20 @@ class TowerDefense:
         """toggle the new mode that we just entered."""
         if self.build_tower_button.toggle_status == True:
             self.build_tower_mode = True
+            self.pre_round_mode = False
         else:
             self.build_tower_mode = False
+            self.pre_round_mode = True
+
+
+    def _check_hover(self):
+        """Check to see if mouse is hovering a placed tower."""
+        mouse_pos = pygame.mouse.get_pos()
+        for tower in self.towers:
+            if pygame.Rect.collidepoint(tower.rect, mouse_pos):
+                print("Hovering a tower!")
+                # display the tower range.
+                self._display_tower_range(tower.rect.center) # Send tower.rect.center instead of mouse pos
 
     
     def _update_screen(self):
@@ -183,6 +196,9 @@ class TowerDefense:
 
         if self.build_tower_mode == True:
             self._display_tower()
+        elif self.pre_round_mode == True: # only in pre-round mode, not when placing a tower.
+            self._check_hover()
+
             
 
 
