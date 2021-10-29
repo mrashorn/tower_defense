@@ -83,7 +83,10 @@ class TowerDefense:
             grass = False
 
         if grass:
-            self.towers.add(tower)
+            # Add a check for rect collisions between tower and existing towers.
+            tower_collision = self._check_tower_collisions(tower)
+            if tower_collision == False:
+                self.towers.add(tower)
 
 
     def _check_pixel_color(self, mouse_pos):
@@ -93,6 +96,17 @@ class TowerDefense:
         # Check for green color
         if pixel_color[0] < 110 and pixel_color [1] > 90:
             return True
+        else:
+            return False
+
+
+    def _check_tower_collisions(self, tower):
+        """Check if the newly placed tower will collide with an existing tower."""
+        for placed_tower in self.towers:
+            if pygame.sprite.collide_rect(tower, placed_tower):
+                return True
+        return False
+
     
 
 
@@ -179,7 +193,6 @@ class TowerDefense:
         mouse_pos = pygame.mouse.get_pos()
         for tower in self.towers:
             if pygame.Rect.collidepoint(tower.rect, mouse_pos):
-                print("Hovering a tower!")
                 # display the tower range.
                 self._display_tower_range(tower.rect.center) # Send tower.rect.center instead of mouse pos
 
