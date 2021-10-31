@@ -4,6 +4,7 @@ from settings import Settings
 from button import Button
 from tower import Tower
 from tower_hovers import Tower_Hovers
+from enemy import Enemy
 
 class TowerDefense:
     """Overall class to manage assets and behavior"""
@@ -34,6 +35,7 @@ class TowerDefense:
 
         # Create the various sprite groups of the game
         self.towers = pygame.sprite.Group()
+        self.enemies = pygame.sprite.Group()
 
         # Go get the tower hover images
         self.tower_hovers = Tower_Hovers()
@@ -87,6 +89,8 @@ class TowerDefense:
             tower_collision = self._check_tower_collisions(tower)
             if tower_collision == False:
                 self.towers.add(tower)
+                # Spawn an enemy for testing purposes.
+                self._spawn_enemy()
 
 
     def _check_pixel_color(self, mouse_pos):
@@ -166,6 +170,14 @@ class TowerDefense:
                     tower_image.set_at((x,y), pygame.Color(250, 0, 0))
 
 
+    def _spawn_enemy(self):
+        """Spawn an enemy at the spawn location on the map."""
+        enemy = Enemy(self)
+        self.enemies.add(enemy)
+
+
+
+
                 
     def _check_button_clicked(self, mouse_pos):
         """Check if the mouse clicked any of the game's buttons."""
@@ -209,6 +221,7 @@ class TowerDefense:
         self.build_tower_button.draw_button() # eventually probably have a function that draws all buttons.
 
         self.towers.draw(self.screen)
+        self.enemies.draw(self.screen)
 
         if self.build_tower_mode == True:
             self._display_tower()
