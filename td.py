@@ -114,6 +114,7 @@ class TowerDefense:
         """Display the selected tower as the mouse is moved around."""
         mouse_pos = pygame.mouse.get_pos()
         self.tower_hovers.basic_tower_rect.center = mouse_pos
+        tower = Tower(self, mouse_pos)
 
         # if mouse outside map, grass = F
         # If mouse is outside bounds of map, check the screen. 
@@ -127,6 +128,8 @@ class TowerDefense:
             # Can build here
             # Change the color of the displayed tower to green. 
             self._make_green(self.tower_hovers.basic_tower_image)
+            if self._check_tower_collisions(tower) == True:
+                self._make_red(self.tower_hovers.basic_tower_image)            
         else:
             # Not Grass
             # Change the color back to normal or to red!
