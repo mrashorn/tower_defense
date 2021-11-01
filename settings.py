@@ -14,4 +14,3 @@ class Settings:
         # Tower settings
         self.basic_tower_range = 125
 
-

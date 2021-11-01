@@ -26,12 +26,13 @@ class TowerDefense:
         self.map_rect = self.map_image.get_rect()
 
         # Create the first build tower button
-        self.build_tower_button = Button(self)
-        self.button_clicked = False # Was a button just clicked?
+        self.build_tower_button = Button(self, 'images/build_tower_unpressed.bmp', 650, 850)
+        self.start_round_button = Button(self, 'images/start_round.bmp', 850, 850)
 
         # Initialize various game modes
         self.build_tower_mode = False
         self.pre_round_mode = True
+        self.live_round_mode = False
 
         # Create the various sprite groups of the game
         self.towers = pygame.sprite.Group()
@@ -40,6 +41,9 @@ class TowerDefense:
         # Go get the tower hover images
         self.tower_hovers = Tower_Hovers()
 
+        # Game Feature Statuses
+        self.enemies_alive = False
+        self.button_clicked = False # Was a button just clicked?
 
 
 
@@ -47,6 +51,7 @@ class TowerDefense:
         """Start the main game loop."""
         while True:
             self._check_events()
+            self._check_enemy_status()
             self._update_screen()
             
 
@@ -57,7 +62,6 @@ class TowerDefense:
                 sys.exit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
-                print(mouse_pos)
                 # check what mode we are in mode = check_mode(self)
                 # if mode = build tower
                       # build tower functions (mouse pos)
@@ -74,24 +78,29 @@ class TowerDefense:
                     self._build_tower(mouse_pos)
 
 
+    def _check_enemy_status(self):
+        """Check if any enemies are left alive."""
+        if self.enemies:
+            self.enemies_alive = True
+        else:
+            self.enemies_alive = False
+
+
     def _build_tower(self, mouse_pos):
         """Build a tower where the user clicked."""
         tower = Tower(self, mouse_pos)
 
-        # Check to make sure tower can only be built on grass.
-         
+        # Only allow tower placement inside map area and on grass.
         if mouse_pos[0] < 1175 and mouse_pos[1] < 775:
             grass = self._check_pixel_color(mouse_pos)
         else:
             grass = False
 
         if grass:
-            # Add a check for rect collisions between tower and existing towers.
+            # Check for tower collisions.
             tower_collision = self._check_tower_collisions(tower)
             if tower_collision == False:
                 self.towers.add(tower)
-                # Spawn an enemy for testing purposes.
-                self._spawn_enemy()
 
 
     def _check_pixel_color(self, mouse_pos):
@@ -130,14 +139,13 @@ class TowerDefense:
             grass = self._check_pixel_color(mouse_pos)
 
         if grass:
-            # Can build here
             # Change the color of the displayed tower to green. 
             self._make_green(self.tower_hovers.basic_tower_image)
             if self._check_tower_collisions(tower) == True:
                 self._make_red(self.tower_hovers.basic_tower_image)            
         else:
             # Not Grass
-            # Change the color back to normal or to red!
+            # Change the color back to red
             self._make_red(self.tower_hovers.basic_tower_image)            
             
         self.screen.blit(self.tower_hovers.basic_tower_image, self.tower_hovers.basic_tower_rect)
@@ -186,12 +194,25 @@ class TowerDefense:
 
         # Check which button we clicked.
         new_tower_clicked = self.build_tower_button.rect.collidepoint(mouse_pos)
+        start_round_clicked = self.start_round_button.rect.collidepoint(mouse_pos)
         
         # Carry out the button functions depending on which button was clicked.
         if new_tower_clicked:
             self.build_tower_button.toggle_button()
             self._toggle_mode()
             self.button_clicked = True
+
+        if start_round_clicked:
+            self.live_round_mode = True
+            self._start_round(2)
+
+
+    def _start_round(self, current_level):
+        """Start the round by spawning enemies based on the current game level."""
+        for i in range(current_level):
+            self._spawn_enemy()
+            print(f"Starting level {i+1}!")
+
 
 
     def _toggle_mode(self):
@@ -212,6 +233,13 @@ class TowerDefense:
                 # display the tower range.
                 self._display_tower_range(tower.rect.center) # Send tower.rect.center instead of mouse pos
 
+
+    def _draw_buttons(self):
+        """Draw all the games buttons."""
+        self.build_tower_button.draw_button()
+        if self.live_round_mode == False:
+            self.start_round_button.draw_button()
+
     
     def _update_screen(self):
         """Update images on screen, flip to new screen."""
@@ -219,7 +247,7 @@ class TowerDefense:
         self.screen.fill(self.settings.bg_color) # can remove once the map is done
         # Draw the map
         self.screen.blit(self.map_image, self.map_rect)
-        self.build_tower_button.draw_button() # eventually probably have a function that draws all buttons.
+        self._draw_buttons()
 
         self.towers.draw(self.screen)
         self.enemies.draw(self.screen)
