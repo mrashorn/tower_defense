@@ -57,6 +57,7 @@ class TowerDefense:
                 sys.exit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
+                print(mouse_pos)
                 # check what mode we are in mode = check_mode(self)
                 # if mode = build tower
                       # build tower functions (mouse pos)

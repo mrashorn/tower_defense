@@ -15,8 +15,7 @@ class Enemy(Sprite):
         self.rect = self.image.get_rect()
 
         # Spawn point for enemies is (20, 170)
-        self.rect.x = 20
-        self.rect.y = 170
+        self.rect.center = (20, 170)
 
         # Store the enemy's exact positions
         self.x = float(self.rect.x)
