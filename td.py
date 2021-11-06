@@ -26,7 +26,7 @@ class TowerDefense:
         self.map_rect = self.map_image.get_rect()
 
         # Create the first build tower button
-        self.build_tower_button = Button(self, 'images/build_tower_unpressed.bmp', 650, 850)
+        self.build_tower_button = Button(self, 'images/build_tower.bmp', 650, 850)
         self.start_round_button = Button(self, 'images/start_round.bmp', 850, 850)
 
         # Initialize various game modes
@@ -204,7 +204,8 @@ class TowerDefense:
 
         if start_round_clicked:
             self.live_round_mode = True
-            self._start_round(2)
+            self._start_round(1)
+            self.start_round_button.remove_button()
 
 
     def _start_round(self, current_level):
