@@ -14,3 +14,6 @@ class Settings:
         # Tower settings
         self.basic_tower_range = 125
 
+        # Enemy Settings
+        self.enemy_speed = 5
+

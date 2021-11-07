@@ -15,7 +15,10 @@ class TowerDefense:
         
         # Go get the settings
         self.settings = Settings()
-        
+
+        # Get the enemy walking path
+        pathFile = open('path.txt')
+        self.enemy_path = pathFile.readlines()
 
         self.screen = pygame.display.set_mode((
             self.settings.screen_width, self.settings.screen_height))
@@ -52,8 +55,9 @@ class TowerDefense:
         while True:
             self._check_events()
             self._check_enemy_status()
+            self._update_enemies()
             self._update_screen()
-            
+
 
     def _check_events(self):
         """Respond to keyboard and mouse presses."""
@@ -84,6 +88,23 @@ class TowerDefense:
             self.enemies_alive = True
         else:
             self.enemies_alive = False
+
+
+    def _update_enemies(self):
+        """Check and update all enemy locations, move enemies along path."""
+        counter = 1
+        for enemy in self.enemies:
+            # Get enemy location
+            # Get the next location they are going to
+            # calculate the direction to travel 
+            # travel
+            # check for if they made it
+            # Mark that checkpoint True
+            print("This is enemy " + str(counter))
+            print("Here is this enemies checkpoint list!")
+            print(enemy.checkpoints)
+            counter += 1
+            
 
 
     def _build_tower(self, mouse_pos):
@@ -183,9 +204,6 @@ class TowerDefense:
         """Spawn an enemy at the spawn location on the map."""
         enemy = Enemy(self)
         self.enemies.add(enemy)
-
-
-
 
                 
     def _check_button_clicked(self, mouse_pos):

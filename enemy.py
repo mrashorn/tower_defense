@@ -21,4 +21,7 @@ class Enemy(Sprite):
         self.x = float(self.rect.x)
         self.y = float(self.rect.y)
 
+        # Create a checkpoint list for the enemy. 
+        self.checkpoints = [False] * len(td_game.enemy_path)
+
 
