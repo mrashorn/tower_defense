@@ -94,8 +94,10 @@ class TowerDefense:
         """Check and update all enemy locations, move enemies along path."""
         counter = 1
         for enemy in self.enemies:
-            # Get enemy location
+            # Get the enemy location
+            enemy_location = enemy.rect.center
             # Get the next location they are going to
+            next_dest = self._get_next_dest(enemy)
             # calculate the direction to travel 
             # travel
             # check for if they made it
@@ -104,7 +106,20 @@ class TowerDefense:
             print("Here is this enemies checkpoint list!")
             print(enemy.checkpoints)
             counter += 1
-            
+
+
+    def _get_next_dest(self, enemy):
+        """Find which checkpoint is next to travel to for the enemy."""
+        for checkpoint in enemy.checkpoints:
+            if checkpoint == False:
+                # Get the checkpoints index
+                index = enemy.checkpoints.index(checkpoint)
+                # Get the coordinate from the enemy_path, strip the ends
+                coordinate = self.enemy_path[index].strip()[1:-2]
+                # Get the specific X and Y values
+                x_coord = int(coordinate[:coordinate.index(",")])
+                y_coord = int(coordinate[coordinate.index(",") + 2:])
+                return(x_coord, y_coord)
 
 
     def _build_tower(self, mouse_pos):
