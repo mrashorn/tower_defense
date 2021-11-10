@@ -5,6 +5,7 @@ from button import Button
 from tower import Tower
 from tower_hovers import Tower_Hovers
 from enemy import Enemy
+import math
 
 class TowerDefense:
     """Overall class to manage assets and behavior"""
@@ -52,11 +53,14 @@ class TowerDefense:
 
     def run_game(self):
         """Start the main game loop."""
+        self.counter = 1
         while True:
             self._check_events()
             self._check_enemy_status()
             self._update_enemies()
             self._update_screen()
+            if self.counter > 75:
+                sys.exit()
 
 
     def _check_events(self):
@@ -92,20 +96,21 @@ class TowerDefense:
 
     def _update_enemies(self):
         """Check and update all enemy locations, move enemies along path."""
-        counter = 1
         for enemy in self.enemies:
             # Get the enemy location
             enemy_location = enemy.rect.center
             # Get the next location they are going to
             next_dest = self._get_next_dest(enemy)
             # calculate the direction to travel 
+            travel_direction = self._get_travel_direction(enemy_location, next_dest)
             # travel
+            # I think you only do one "unit" or frame of movement here. 
+            enemy.rect.center = self._enemy_travel(enemy_location, travel_direction)
+            self.counter += 1
             # check for if they made it
             # Mark that checkpoint True
-            print("This is enemy " + str(counter))
             print("Here is this enemies checkpoint list!")
             print(enemy.checkpoints)
-            counter += 1
 
 
     def _get_next_dest(self, enemy):
@@ -120,6 +125,35 @@ class TowerDefense:
                 x_coord = int(coordinate[:coordinate.index(",")])
                 y_coord = int(coordinate[coordinate.index(",") + 2:])
                 return(x_coord, y_coord)
+
+
+    def _get_travel_direction(self, enemy_location, next_dest):
+        """Find the travel vector based on location and next destination."""
+        # enemy current coordinates
+        enemy_x_coord = enemy_location[0]
+        enemy_y_coord = enemy_location[1]
+        # coordinates of next point in the path
+        next_x = next_dest[0]
+        next_y = next_dest[1]
+        # the difference between those two positions
+        delta_x = next_x - enemy_x_coord
+        delta_y = next_y - enemy_y_coord
+        # Solve for theta
+        theta = math.atan(delta_y/delta_x)
+        return theta
+
+    def _enemy_travel(self, enemy_location, theta):
+        """Move the enemy in the travel direction."""
+        enemy_x_coord = enemy_location[0]
+        enemy_y_coord = enemy_location[1]
+        enemy_new_x = enemy_x_coord + (self.settings.enemy_speed * math.cos(theta))
+        enemy_new_y = enemy_y_coord + (self.settings.enemy_speed * math.sin(theta))
+        print("Enemy new x position is " + str(enemy_new_x))
+        print("Enemy new y position is " + str(enemy_new_y))
+        return (enemy_new_x, enemy_new_y)
+
+
+
 
 
     def _build_tower(self, mouse_pos):
