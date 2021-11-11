@@ -59,7 +59,7 @@ class TowerDefense:
             self._check_enemy_status()
             self._update_enemies()
             self._update_screen()
-            if self.counter > 75:
+            if self.counter > 175:
                 sys.exit()
 
 
@@ -99,18 +99,17 @@ class TowerDefense:
         for enemy in self.enemies:
             # Get the enemy location
             enemy_location = enemy.rect.center
+            print("The current location is " + str(enemy_location[0]) + ", " + str(enemy_location[1]))
             # Get the next location they are going to
             next_dest = self._get_next_dest(enemy)
-            # calculate the direction to travel 
-            travel_direction = self._get_travel_direction(enemy_location, next_dest)
+            print("The next destination is " + str(next_dest[0]) + ", " + str(next_dest[1]))
             # travel
-            # I think you only do one "unit" or frame of movement here. 
-            enemy.rect.center = self._enemy_travel(enemy_location, travel_direction)
+            enemy.rect.center = self._enemy_travel(enemy_location, next_dest)
             self.counter += 1
             # check for if they made it
             # Mark that checkpoint True
-            print("Here is this enemies checkpoint list!")
-            print(enemy.checkpoints)
+            print(enemy.checkpoints[0], enemy.checkpoints[1])
+            print()
 
 
     def _get_next_dest(self, enemy):
@@ -120,40 +119,37 @@ class TowerDefense:
                 # Get the checkpoints index
                 index = enemy.checkpoints.index(checkpoint)
                 # Get the coordinate from the enemy_path, strip the ends
-                coordinate = self.enemy_path[index].strip()[1:-2]
+                coordinate = self.enemy_path[index].strip()[1:-1]
                 # Get the specific X and Y values
                 x_coord = int(coordinate[:coordinate.index(",")])
                 y_coord = int(coordinate[coordinate.index(",") + 2:])
                 return(x_coord, y_coord)
 
 
-    def _get_travel_direction(self, enemy_location, next_dest):
-        """Find the travel vector based on location and next destination."""
-        # enemy current coordinates
+    def _enemy_travel(self, enemy_location, next_dest):
+        """Move the enemy in the travel direction."""
         enemy_x_coord = enemy_location[0]
         enemy_y_coord = enemy_location[1]
+        enemy_new_x = enemy_x_coord
+        enemy_new_y = enemy_y_coord
         # coordinates of next point in the path
         next_x = next_dest[0]
         next_y = next_dest[1]
         # the difference between those two positions
         delta_x = next_x - enemy_x_coord
         delta_y = next_y - enemy_y_coord
-        # Solve for theta
-        theta = math.atan(delta_y/delta_x)
-        return theta
-
-    def _enemy_travel(self, enemy_location, theta):
-        """Move the enemy in the travel direction."""
-        enemy_x_coord = enemy_location[0]
-        enemy_y_coord = enemy_location[1]
-        enemy_new_x = enemy_x_coord + (self.settings.enemy_speed * math.cos(theta))
-        enemy_new_y = enemy_y_coord + (self.settings.enemy_speed * math.sin(theta))
-        print("Enemy new x position is " + str(enemy_new_x))
-        print("Enemy new y position is " + str(enemy_new_y))
+        print(f"delta x = {delta_x}")
+        print(f"delta y = {delta_y}")
+        if delta_x > 0:
+            enemy_new_x = enemy_x_coord + 1
+        elif delta_x < 0:
+            enemy_new_x = enemy_x_coord - 1
+        if delta_y > 0:
+            enemy_new_y = enemy_y_coord + 1
+        elif delta_y < 0:
+            enemy_new_y = enemy_y_coord - 1
         return (enemy_new_x, enemy_new_y)
-
-
-
+    
 
 
     def _build_tower(self, mouse_pos):
