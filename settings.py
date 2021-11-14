@@ -10,10 +10,12 @@ class Settings:
         self.screen_height = 900
         self.bg_color = (0, 0, 0)
 
+        # Game Settings
+        self.tick_rate = 40
+
 
         # Tower settings
         self.basic_tower_range = 125
 
         # Enemy Settings
-        self.enemy_speed = 10
-
+        self.enemy_speed = 1

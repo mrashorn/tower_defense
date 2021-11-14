@@ -53,14 +53,12 @@ class TowerDefense:
 
     def run_game(self):
         """Start the main game loop."""
-        self.counter = 1
         while True:
+            pygame.time.Clock().tick(self.settings.tick_rate)
             self._check_events()
             self._check_enemy_status()
             self._update_enemies()
             self._update_screen()
-            if self.counter > 175:
-                sys.exit()
 
 
     def _check_events(self):
@@ -97,19 +95,14 @@ class TowerDefense:
     def _update_enemies(self):
         """Check and update all enemy locations, move enemies along path."""
         for enemy in self.enemies:
-            # Get the enemy location
-            enemy_location = enemy.rect.center
-            print("The current location is " + str(enemy_location[0]) + ", " + str(enemy_location[1]))
             # Get the next location they are going to
             next_dest = self._get_next_dest(enemy)
-            print("The next destination is " + str(next_dest[0]) + ", " + str(next_dest[1]))
             # travel
-            enemy.rect.center = self._enemy_travel(enemy_location, next_dest)
-            self.counter += 1
+            enemy.x, enemy.y = self._enemy_travel(enemy.x, enemy.y, next_dest)
+            enemy.rect.center = (enemy.x, enemy.y)
+            
             # check for if they made it
             # Mark that checkpoint True
-            print(enemy.checkpoints[0], enemy.checkpoints[1])
-            print()
 
 
     def _get_next_dest(self, enemy):
@@ -126,29 +119,23 @@ class TowerDefense:
                 return(x_coord, y_coord)
 
 
-    def _enemy_travel(self, enemy_location, next_dest):
+    def _enemy_travel(self, enemy_x, enemy_y, next_dest):
         """Move the enemy in the travel direction."""
-        enemy_x_coord = enemy_location[0]
-        enemy_y_coord = enemy_location[1]
-        enemy_new_x = enemy_x_coord
-        enemy_new_y = enemy_y_coord
         # coordinates of next point in the path
         next_x = next_dest[0]
         next_y = next_dest[1]
         # the difference between those two positions
-        delta_x = next_x - enemy_x_coord
-        delta_y = next_y - enemy_y_coord
-        print(f"delta x = {delta_x}")
-        print(f"delta y = {delta_y}")
+        delta_x = next_x - enemy_x
+        delta_y = next_y - enemy_y
         if delta_x > 0:
-            enemy_new_x = enemy_x_coord + 1
+            enemy_x = enemy_x + 1*self.settings.enemy_speed
         elif delta_x < 0:
-            enemy_new_x = enemy_x_coord - 1
+            enemy_x = enemy_x - 1*self.settings.enemy_speed
         if delta_y > 0:
-            enemy_new_y = enemy_y_coord + 1
+            enemy_y = enemy_y + 1*self.settings.enemy_speed
         elif delta_y < 0:
-            enemy_new_y = enemy_y_coord - 1
-        return (enemy_new_x, enemy_new_y)
+            enemy_y = enemy_y - 1*self.settings.enemy_speed
+        return (enemy_x, enemy_y)
     
 
 
