@@ -6,6 +6,7 @@ from tower import Tower
 from tower_hovers import Tower_Hovers
 from enemy import Enemy
 import math
+from game_stats import GameStats
 
 class TowerDefense:
     """Overall class to manage assets and behavior"""
@@ -17,9 +18,16 @@ class TowerDefense:
         # Go get the settings
         self.settings = Settings()
 
+        # Initialize stats
+        self.stats = GameStats(self)
+
         # Get the enemy walking path
         pathFile = open('path.txt')
         self.enemy_path = pathFile.readlines()
+        self.final_coord = self.enemy_path[-1].strip()[1:-1]
+        print(self.enemy_path)
+        print()
+        print(self.final_coord)
 
         self.screen = pygame.display.set_mode((
             self.settings.screen_width, self.settings.screen_height))
@@ -105,9 +113,18 @@ class TowerDefense:
             
             # check for if they made it
             reached_checkpoint = self._check_arrival(next_dest, enemy.x, enemy.y)
+
             # Mark that checkpoint True
             if reached_checkpoint:
                 enemy.checkpoints[checkpoint_index] = True
+
+            # Check if the enemy made it to the final path location
+            if enemy.checkpoints[-1] == True:
+                self.enemies.remove(enemy)
+                self.stats.health_remaining -= 1
+                print(f"The score changed to {self.stats.health_remaining}!")
+            
+
 
 
     def _get_next_dest(self, enemy):
