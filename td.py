@@ -97,12 +97,17 @@ class TowerDefense:
         for enemy in self.enemies:
             # Get the next location they are going to
             next_dest = self._get_next_dest(enemy)
+            checkpoint_index = self._get_checkpoint_index(enemy)
+            
             # travel
             enemy.x, enemy.y = self._enemy_travel(enemy.x, enemy.y, next_dest)
             enemy.rect.center = (enemy.x, enemy.y)
             
             # check for if they made it
+            reached_checkpoint = self._check_arrival(next_dest, enemy.x, enemy.y)
             # Mark that checkpoint True
+            if reached_checkpoint:
+                enemy.checkpoints[checkpoint_index] = True
 
 
     def _get_next_dest(self, enemy):
@@ -117,6 +122,14 @@ class TowerDefense:
                 x_coord = int(coordinate[:coordinate.index(",")])
                 y_coord = int(coordinate[coordinate.index(",") + 2:])
                 return(x_coord, y_coord)
+
+
+    def _get_checkpoint_index(self, enemy):
+        """Get the index of the next checkpoint that is false."""
+        for checkpoint in enemy.checkpoints:
+            if checkpoint == False:
+                index = enemy.checkpoints.index(checkpoint)
+                return index
 
 
     def _enemy_travel(self, enemy_x, enemy_y, next_dest):
@@ -136,8 +149,14 @@ class TowerDefense:
         elif delta_y < 0:
             enemy_y = enemy_y - 1*self.settings.enemy_speed
         return (enemy_x, enemy_y)
-    
 
+
+    def _check_arrival(self, destination, enemy_x, enemy_y):
+        """checks to see if enemy is close enough to their next destination."""
+        if abs(destination[0] - enemy_x) < 10 and abs(destination[1] - enemy_y) < 10:
+            return True
+
+          
 
     def _build_tower(self, mouse_pos):
         """Build a tower where the user clicked."""
