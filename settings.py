@@ -11,7 +11,7 @@ class Settings:
         self.bg_color = (0, 0, 0)
 
         # Game Settings
-        self.tick_rate = 40
+        self.tick_rate = 60
 
 
         # Tower settings

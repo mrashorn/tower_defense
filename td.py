@@ -108,8 +108,7 @@ class TowerDefense:
             checkpoint_index = self._get_checkpoint_index(enemy)
             
             # travel
-            enemy.x, enemy.y = self._enemy_travel(enemy.x, enemy.y, next_dest)
-            enemy.rect.center = (enemy.x, enemy.y)
+            self._enemy_travel(enemy, next_dest)
             
             # check for if they made it
             reached_checkpoint = self._check_arrival(next_dest, enemy.x, enemy.y)
@@ -117,6 +116,7 @@ class TowerDefense:
             # Mark that checkpoint True
             if reached_checkpoint:
                 enemy.checkpoints[checkpoint_index] = True
+                self._reset_moving_flags(enemy)
 
             # Check if the enemy made it to the final path location
             if enemy.checkpoints[-1] == True:
@@ -149,23 +149,36 @@ class TowerDefense:
                 return index
 
 
-    def _enemy_travel(self, enemy_x, enemy_y, next_dest):
+    def _enemy_travel(self, enemy, next_dest):
         """Move the enemy in the travel direction."""
-        # coordinates of next point in the path
-        next_x = next_dest[0]
-        next_y = next_dest[1]
         # the difference between those two positions
-        delta_x = next_x - enemy_x
-        delta_y = next_y - enemy_y
+        delta_x = next_dest[0] - enemy.x
+        delta_y = next_dest[1] - enemy.y
+
         if delta_x > 0:
-            enemy_x = enemy_x + 1*self.settings.enemy_speed
-        elif delta_x < 0:
-            enemy_x = enemy_x - 1*self.settings.enemy_speed
+            enemy.moving_right = True
+        else:
+            enemy.moving_left = True
         if delta_y > 0:
-            enemy_y = enemy_y + 1*self.settings.enemy_speed
-        elif delta_y < 0:
-            enemy_y = enemy_y - 1*self.settings.enemy_speed
-        return (enemy_x, enemy_y)
+            enemy.moving_down = True
+        else:
+            enemy.moving_up = True
+
+        if enemy.moving_right != enemy.moving_left:
+            if delta_x > 0:
+                enemy.x = enemy.x + 1*self.settings.enemy_speed
+                enemy.moving_right = True
+            elif delta_x < 0:
+                enemy.x = enemy.x - 1*self.settings.enemy_speed
+                enemy.moving_left = True
+        if enemy.moving_up != enemy.moving_down:
+            if delta_y > 0:
+                enemy.y = enemy.y + 1*self.settings.enemy_speed
+                enemy.moving_down = True
+            elif delta_y < 0:
+                enemy.y = enemy.y - 1*self.settings.enemy_speed
+                enemy.moving_up = True
+        enemy.rect.center = (enemy.x, enemy.y) 
 
 
     def _check_arrival(self, destination, enemy_x, enemy_y):
@@ -173,6 +186,13 @@ class TowerDefense:
         if abs(destination[0] - enemy_x) < 10 and abs(destination[1] - enemy_y) < 10:
             return True
 
+
+    def _reset_moving_flags(self, enemy):
+        """Reset the enemies moving flags so are they ready for the next move."""
+        enemy.moving_right = False
+        enemy.moving_left = False
+        enemy.moving_up = False
+        enemy.moving_down = False
           
 
     def _build_tower(self, mouse_pos):

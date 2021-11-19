@@ -24,4 +24,10 @@ class Enemy(Sprite):
         # Create a checkpoint list for the enemy. 
         self.checkpoints = [False] * len(td_game.enemy_path)
 
+        # enemy movement flags for stopping the jumping around
+        self.moving_right = False
+        self.moving_left = False
+        self.moving_up = False
+        self.moving_down = False
+
 
