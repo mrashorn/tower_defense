@@ -62,7 +62,6 @@ class TowerDefense:
     def run_game(self):
         """Start the main game loop."""
         while True:
-            pygame.time.Clock().tick(self.settings.tick_rate)
             self._check_events()
             self._check_enemy_status()
             self._update_enemies()

@@ -10,10 +10,6 @@ class Settings:
         self.screen_height = 900
         self.bg_color = (0, 0, 0)
 
-        # Game Settings
-        self.tick_rate = 60
-
-
         # Tower settings
         self.basic_tower_range = 125
 
