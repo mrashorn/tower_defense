@@ -25,9 +25,6 @@ class TowerDefense:
         pathFile = open('path.txt')
         self.enemy_path = pathFile.readlines()
         self.final_coord = self.enemy_path[-1].strip()[1:-1]
-        print(self.enemy_path)
-        print()
-        print(self.final_coord)
 
         self.screen = pygame.display.set_mode((
             self.settings.screen_width, self.settings.screen_height))
@@ -49,6 +46,7 @@ class TowerDefense:
         # Create the various sprite groups of the game
         self.towers = pygame.sprite.Group()
         self.enemies = pygame.sprite.Group()
+        self.bullets = pygame.sprite.Group()
 
         # Go get the tower hover images
         self.tower_hovers = Tower_Hovers()
@@ -64,6 +62,7 @@ class TowerDefense:
         while True:
             self._check_events()
             self._check_enemy_status()
+            self._update_bullets()
             self._update_enemies()
             self._update_screen()
 
@@ -121,7 +120,6 @@ class TowerDefense:
             if enemy.checkpoints[-1] == True:
                 self.enemies.remove(enemy)
                 self.stats.health_remaining -= 1
-                print(f"The score changed to {self.stats.health_remaining}!")
             
 
 
@@ -192,6 +190,34 @@ class TowerDefense:
         enemy.moving_left = False
         enemy.moving_up = False
         enemy.moving_down = False
+
+
+    def _update_bullets(self):
+        """Detect if bullets need to be created, orient them, shoot them, delete them."""
+        # Detect if enemy in range of tower
+        self._find_enemies_in_range(self.enemies, self.towers)
+
+        # Create Shoot bullet at enemy
+        # Orient bullet properly
+        # Damage enemy and delete bullet
+        # In update_enemies - check for 0 health and delete enemy, that will go elsewhere.
+
+
+    def _find_enemies_in_range(self, enemies, towers):
+        """Look through all enemies and towers to find enemies in range of a tower."""
+        for enemy in enemies:
+            for tower in towers:
+                if self._calculate_distance(enemy, tower) < tower.range:
+                    print("Tower is shooting!")
+
+
+    def _calculate_distance(self, entity_one, entity_two):
+        """Calculate the distance between two points."""
+        dist = math.hypot(entity_one.rect.center[0] - entity_two.rect.center[0], 
+                entity_one.rect.center[1] - entity_two.rect.center[1])
+        return dist
+
+
           
 
     def _build_tower(self, mouse_pos):
