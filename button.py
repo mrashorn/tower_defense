@@ -47,6 +47,10 @@ class Button:
         self.rect = pygame.Rect(0,0,0,0)
 
 
+    def _recreate_button(self):
+        """Recreate the button since it was removed earlier."""
+
+
     def _make_button_green(self, button_image):
         """Give the button a green tint."""
         w, h = button_image.get_size()

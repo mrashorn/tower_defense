@@ -40,7 +40,6 @@ class TowerDefense:
 
         # Initialize various game modes
         self.build_tower_mode = False
-        self.pre_round_mode = True
         self.live_round_mode = False
 
         # Create the various sprite groups of the game
@@ -61,7 +60,7 @@ class TowerDefense:
         """Start the main game loop."""
         while True:
             self._check_events()
-            self._check_enemy_status()
+            self._update_game_status()
             self._update_bullets()
             self._update_enemies()
             self._update_screen()
@@ -90,12 +89,13 @@ class TowerDefense:
                     self._build_tower(mouse_pos)
 
 
-    def _check_enemy_status(self):
-        """Check if any enemies are left alive."""
-        if self.enemies:
-            self.enemies_alive = True
+    def _update_game_status(self):
+        """Create and display the correct buttons and functionality based on game situation."""
+        if len(self.enemies) < 1:
+            self.live_round_mode = False
         else:
-            self.enemies_alive = False
+            self.live_round_mode = True
+            
 
 
     def _update_enemies(self):
@@ -333,10 +333,11 @@ class TowerDefense:
             self._toggle_mode()
             self.button_clicked = True
 
-        if start_round_clicked:
-            self.live_round_mode = True
-            self._start_round(1)
-            self.start_round_button.remove_button()
+        if self.live_round_mode == False:
+            if start_round_clicked:
+                print("Start button clicked")
+                self._start_round(1)
+                # self.start_round_button.remove_button() 
 
 
     def _start_round(self, current_level):
@@ -351,10 +352,8 @@ class TowerDefense:
         """toggle the new mode that we just entered."""
         if self.build_tower_button.toggle_status == True:
             self.build_tower_mode = True
-            self.pre_round_mode = False
         else:
             self.build_tower_mode = False
-            self.pre_round_mode = True
 
 
     def _check_hover(self):
@@ -372,6 +371,7 @@ class TowerDefense:
         if self.live_round_mode == False:
             self.start_round_button.draw_button()
 
+
     
     def _update_screen(self):
         """Update images on screen, flip to new screen."""
@@ -386,7 +386,7 @@ class TowerDefense:
 
         if self.build_tower_mode == True:
             self._display_tower()
-        elif self.pre_round_mode == True: # only in pre-round mode, not when placing a tower.
+        else:
             self._check_hover()
 
             
