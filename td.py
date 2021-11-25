@@ -7,6 +7,7 @@ from tower_hovers import Tower_Hovers
 from enemy import Enemy
 import math
 from game_stats import GameStats
+import time
 
 class TowerDefense:
     """Overall class to manage assets and behavior"""
@@ -53,6 +54,9 @@ class TowerDefense:
         # Game Feature Statuses
         self.enemies_alive = False
         self.button_clicked = False # Was a button just clicked?
+        self.new_round_started = False # Are we currently starting a new round?
+        self.enemy_number = 1
+        self.timer = time.time()
 
 
 
@@ -64,6 +68,9 @@ class TowerDefense:
             self._update_bullets()
             self._update_enemies()
             self._update_screen()
+            
+            if self.new_round_started:
+                self._generate_enemy(self.stats.level, self.enemy_number)
 
 
     def _check_events(self):
@@ -336,16 +343,30 @@ class TowerDefense:
         if self.live_round_mode == False:
             if start_round_clicked:
                 print("Start button clicked")
-                self._start_round(1)
+                self._start_round()
                 # self.start_round_button.remove_button() 
 
 
-    def _start_round(self, current_level):
+    def _start_round(self):
         """Start the round by spawning enemies based on the current game level."""
-        for i in range(current_level):
-            self._spawn_enemy()
-            print(f"Starting level {i+1}!")
 
+        self.new_round_started = True
+        self.stats.level += 1
+        print(f"Starting level {self.stats.level}!")
+
+
+    def _generate_enemy(self, current_level, enemy_num):
+        """Generate the number of enemies for the round over time."""
+
+        if enemy_num <= current_level:
+            if time.time() - self.timer > 0.25:
+                self._spawn_enemy()
+                self.timer = time.time()
+                self.enemy_number += 1
+
+                if enemy_num == current_level:
+                    self.new_round_started = False
+                    self.enemy_number = 1
 
 
     def _toggle_mode(self):

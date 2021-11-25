@@ -10,6 +10,4 @@ class GameStats:
     def reset_stats(self):
         """Reset the initialized stats that can be changed."""
         self.health_remaining = 100
-        self.level = 1
-        
-
+        self.level = 0 # Game iterates to level 1 when the user clicks the first round.
