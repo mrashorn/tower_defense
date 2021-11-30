@@ -69,8 +69,6 @@ class TowerDefense:
             self._update_enemies()
             self._update_screen()
             
-            if self.new_round_started:
-                self._generate_enemy(self.stats.level, self.enemy_number)
 
 
     def _check_events(self):
@@ -127,8 +125,9 @@ class TowerDefense:
             if enemy.checkpoints[-1] == True:
                 self.enemies.remove(enemy)
                 self.stats.health_remaining -= 1
-            
 
+        if self.new_round_started:
+            self._generate_enemy(self.stats.level, self.enemy_number)
 
 
     def _get_next_dest(self, enemy):
