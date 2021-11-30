@@ -112,6 +112,9 @@ class TowerDefense:
             
             # travel
             self._enemy_travel(enemy, next_dest)
+
+            # flip the enemy sprite if they are moving left or right.
+            self._change_enemy_sprite(enemy)
             
             # check for if they made it
             reached_checkpoint = self._check_arrival(next_dest, enemy.x, enemy.y)
@@ -182,6 +185,16 @@ class TowerDefense:
                 enemy.y = enemy.y - 1*self.settings.enemy_speed
                 enemy.moving_up = True
         enemy.rect.center = (enemy.x, enemy.y) 
+
+
+    def _change_enemy_sprite(self, enemy):
+        """Change the enemy sprite direction to face correct direction when traveling left or right."""
+        if enemy.moving_left == True:
+            enemy.image = pygame.image.load('images/enemy_flipped.bmp') # flipped enemy faces left
+        else:
+            enemy.image = pygame.image.load('images/enemy.bmp')
+
+
 
 
     def _check_arrival(self, destination, enemy_x, enemy_y):
