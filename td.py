@@ -65,6 +65,7 @@ class TowerDefense:
         while True:
             self._check_events()
             self._update_game_status()
+            self._shoot_enemies(self.enemies, self.towers)
             self._update_bullets()
             self._update_enemies()
             self._update_screen()
@@ -114,7 +115,7 @@ class TowerDefense:
             self._enemy_travel(enemy, next_dest)
 
             # flip the enemy sprite if they are moving left or right.
-            self._change_enemy_sprite(enemy)
+            enemy._change_sprite_direction()
             
             # check for if they made it
             reached_checkpoint = self._check_arrival(next_dest, enemy.x, enemy.y)
@@ -187,16 +188,6 @@ class TowerDefense:
         enemy.rect.center = (enemy.x, enemy.y) 
 
 
-    def _change_enemy_sprite(self, enemy):
-        """Change the enemy sprite direction to face correct direction when traveling left or right."""
-        if enemy.moving_left == True:
-            enemy.image = pygame.image.load('images/enemy_flipped.bmp') # flipped enemy faces left
-        else:
-            enemy.image = pygame.image.load('images/enemy.bmp')
-
-
-
-
     def _check_arrival(self, destination, enemy_x, enemy_y):
         """checks to see if enemy is close enough to their next destination."""
         if abs(destination[0] - enemy_x) < 10 and abs(destination[1] - enemy_y) < 10:
@@ -212,22 +203,26 @@ class TowerDefense:
 
 
     def _update_bullets(self):
-        """Detect if bullets need to be created, orient them, shoot them, delete them."""
-        # Detect if enemy in range of tower
-        self._find_enemies_in_range(self.enemies, self.towers)
-
-        # Create Shoot bullet at enemy
-        # Orient bullet properly
+        """Update position of bullets and delete them."""
+        # check collisions
         # Damage enemy and delete bullet
         # In update_enemies - check for 0 health and delete enemy, that will go elsewhere.
 
 
-    def _find_enemies_in_range(self, enemies, towers):
-        """Look through all enemies and towers to find enemies in range of a tower."""
+    def _shoot_enemies(self, enemies, towers):
+        """Detect if enemies need to be shot."""
         for enemy in enemies:
             for tower in towers:
                 if self._calculate_distance(enemy, tower) < tower.range:
                     print("Tower is shooting!")
+                    self._shoot_bullet(tower, enemy)
+                    # Create Shoot bullet at enemy
+                    # Orient bullet properly
+
+
+    def _shoot_bullet(self, tower, enemy):
+        """Create the bullet at the tower, and point it towards the enemy."""
+
 
 
     def _calculate_distance(self, entity_one, entity_two):

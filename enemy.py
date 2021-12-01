@@ -31,3 +31,11 @@ class Enemy(Sprite):
         self.moving_down = False
 
 
+    def _change_sprite_direction(self):
+        """Change the enemy sprite direction to face correct direction when traveling left or right."""
+        if self.moving_left == True:
+            self.image = pygame.image.load('images/enemy_flipped.bmp') # flipped enemy faces left
+        else:
+            self.image = pygame.image.load('images/enemy.bmp')
+
+
