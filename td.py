@@ -5,6 +5,7 @@ from button import Button
 from tower import Tower
 from tower_hovers import Tower_Hovers
 from enemy import Enemy
+from bullet import Bullet
 import math
 from game_stats import GameStats
 import time
@@ -65,7 +66,7 @@ class TowerDefense:
         while True:
             self._check_events()
             self._update_game_status()
-            self._shoot_enemies(self.enemies, self.towers)
+            self._shoot_enemies()
             self._update_bullets()
             self._update_enemies()
             self._update_screen()
@@ -209,10 +210,10 @@ class TowerDefense:
         # In update_enemies - check for 0 health and delete enemy, that will go elsewhere.
 
 
-    def _shoot_enemies(self, enemies, towers):
+    def _shoot_enemies(self):
         """Detect if enemies need to be shot."""
-        for enemy in enemies:
-            for tower in towers:
+        for enemy in self.enemies:
+            for tower in self.towers:
                 if self._calculate_distance(enemy, tower) < tower.range:
                     print("Tower is shooting!")
                     self._shoot_bullet(tower, enemy)
@@ -222,6 +223,8 @@ class TowerDefense:
 
     def _shoot_bullet(self, tower, enemy):
         """Create the bullet at the tower, and point it towards the enemy."""
+        new_bullet = Bullet(self, tower, enemy)
+        self.bullets.add(new_bullet)
 
 
 
@@ -411,6 +414,7 @@ class TowerDefense:
 
         self.towers.draw(self.screen)
         self.enemies.draw(self.screen)
+        self.bullets.draw(self.screen)
 
         if self.build_tower_mode == True:
             self._display_tower()
