@@ -24,6 +24,7 @@ class Bullet(Sprite):
 
         # bullet attributes
         self.speed = 2
+        self.damage = 50
 
         self._point_bullet(tower, enemy)
 

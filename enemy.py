@@ -30,6 +30,8 @@ class Enemy(Sprite):
         self.moving_up = False
         self.moving_down = False
 
+        self.health = 100
+
 
     def _change_sprite_direction(self):
         """Change the enemy sprite direction to face correct direction when traveling left or right."""

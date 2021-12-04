@@ -130,6 +130,10 @@ class TowerDefense:
                 self.enemies.remove(enemy)
                 self.stats.health_remaining -= 1
 
+            # Check if enemy has zero health and is destroyed
+            if enemy.health <= 0:
+                self.enemies.remove(enemy)
+
         if self.new_round_started:
             self._generate_enemy(self.stats.level, self.enemy_number)
 
@@ -207,8 +211,14 @@ class TowerDefense:
         # Move the bullets
         self.bullets.update()
         # check collisions
-        collisions = pygame.sprite.groupcollide(
-                self.bullets, self.enemies, True, False)
+        for enemy in self.enemies:
+            for bullet in self.bullets:
+                collision = pygame.sprite.collide_rect(enemy, bullet)
+                if collision:
+                    enemy.health -= bullet.damage
+                    self.bullets.remove(bullet)
+                
+
         # Damage enemy and delete bullet
         # In update_enemies - check for 0 health and delete enemy, that will go elsewhere.
 
