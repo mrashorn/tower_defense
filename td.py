@@ -57,7 +57,7 @@ class TowerDefense:
         self.button_clicked = False # Was a button just clicked?
         self.new_round_started = False # Are we currently starting a new round?
         self.enemy_number = 1
-        self.timer = time.time()
+        self.enemy_timer = time.time()
 
 
 
@@ -217,14 +217,14 @@ class TowerDefense:
                 if self._calculate_distance(enemy, tower) < tower.range:
                     print("Tower is shooting!")
                     self._shoot_bullet(tower, enemy)
-                    # Create Shoot bullet at enemy
-                    # Orient bullet properly
 
 
     def _shoot_bullet(self, tower, enemy):
         """Create the bullet at the tower, and point it towards the enemy."""
-        new_bullet = Bullet(self, tower, enemy)
-        self.bullets.add(new_bullet)
+        if time.time() - tower.shoot_timer > tower.fire_rate:
+            new_bullet = Bullet(self, tower, enemy)
+            self.bullets.add(new_bullet)
+            tower.shoot_timer = time.time()
 
 
 
@@ -369,9 +369,9 @@ class TowerDefense:
         """Generate the number of enemies for the round over time."""
 
         if enemy_num <= current_level:
-            if time.time() - self.timer > 0.25:
+            if time.time() - self.enemy_timer > 0.25:
                 self._spawn_enemy()
-                self.timer = time.time()
+                self.enemy_timer = time.time()
                 self.enemy_number += 1
 
                 if enemy_num == current_level:

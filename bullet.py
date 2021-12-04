@@ -35,7 +35,15 @@ class Bullet(Sprite):
         dy = enemy.rect.center[1] - tower.rect.center[1]
         theta = math.atan2(-dy, dx) # dy is neg because y is down in pygame
         degs = math.degrees(theta)
-        pygame.transform.rotate(self.image, degs)
+        print(f"degs: {degs}")
+        self.image = pygame.transform.rotate(self.image, degs)
         print("Just rotated the bullet image.")
+
+
+    def _update_bullet(self):
+        """Update the bullets position based on speed and target direction."""
+        # self.y = ??
+        # self.rect.y = self.y
+
 
 

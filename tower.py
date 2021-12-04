@@ -1,5 +1,6 @@
 import pygame
 from pygame.sprite import Sprite
+import time
 
 class Tower(Sprite):
     """A class to represent the basic tower."""
@@ -19,6 +20,5 @@ class Tower(Sprite):
 
         # Basic Tower's attributes / settings
         self.range = 100
-
-
-
+        self.shoot_timer = time.time()
+        self.fire_rate = 1
