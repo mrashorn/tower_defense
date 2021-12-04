@@ -23,9 +23,7 @@ class Bullet(Sprite):
         self.y = float(self.rect.center[1])
 
         # bullet attributes
-        self.speed = 5
-
-        # Probably need a rotate method, or that can be in the main td.py
+        self.speed = 2
 
         self._point_bullet(tower, enemy)
 
@@ -33,17 +31,18 @@ class Bullet(Sprite):
         """Point the bullet from the tower to the enemy."""
         dx = enemy.rect.center[0] - tower.rect.center[0]
         dy = enemy.rect.center[1] - tower.rect.center[1]
-        theta = math.atan2(-dy, dx) # dy is neg because y is down in pygame
-        degs = math.degrees(theta)
-        print(f"degs: {degs}")
+        self.theta = math.atan2(-dy, dx) # dy is neg because y is down in pygame
+        degs = math.degrees(self.theta)
         self.image = pygame.transform.rotate(self.image, degs)
-        print("Just rotated the bullet image.")
 
 
-    def _update_bullet(self):
+    def update(self):
         """Update the bullets position based on speed and target direction."""
-        # self.y = ??
-        # self.rect.y = self.y
+        self.y = self.y - (self.speed * math.sin(self.theta))
+        self.x = self.x + (self.speed * math.cos(self.theta))
+
+        self.rect.y = self.y
+        self.rect.x = self.x
 
 
 

@@ -70,7 +70,6 @@ class TowerDefense:
             self._update_bullets()
             self._update_enemies()
             self._update_screen()
-            
 
 
     def _check_events(self):
@@ -205,7 +204,11 @@ class TowerDefense:
 
     def _update_bullets(self):
         """Update position of bullets and delete them."""
+        # Move the bullets
+        self.bullets.update()
         # check collisions
+        collisions = pygame.sprite.groupcollide(
+                self.bullets, self.enemies, True, False)
         # Damage enemy and delete bullet
         # In update_enemies - check for 0 health and delete enemy, that will go elsewhere.
 
@@ -215,7 +218,6 @@ class TowerDefense:
         for enemy in self.enemies:
             for tower in self.towers:
                 if self._calculate_distance(enemy, tower) < tower.range:
-                    print("Tower is shooting!")
                     self._shoot_bullet(tower, enemy)
 
 
