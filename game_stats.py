@@ -11,3 +11,4 @@ class GameStats:
         """Reset the initialized stats that can be changed."""
         self.health_remaining = 100
         self.level = 0 # Game iterates to level 1 when the user clicks the first round.
+        self.cash = self.settings.starting_cash

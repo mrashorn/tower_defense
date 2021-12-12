@@ -43,12 +43,12 @@ class TowerDefense:
         self.new_round_started = False # Are we currently starting a new round?
         self.enemy_number = 1
         self.enemy_timer = time.time()
-        self.cash = self.settings.starting_cash
 
         # Create the buttons and display boards
         self.build_tower_button = Button(self, 'images/build_tower.bmp', 650, 850)
         self.start_round_button = Button(self, 'images/start_round.bmp', 850, 850)
-        self.cash_display = Display_Board(self, 0, 800, self.cash)
+        self.cash_display = Display_Board(self, 0, 800, self.stats.cash)
+        self.health_display = Display_Board(self, 0, 850, self.stats.health_remaining)
 
         # Initialize various game modes
         self.build_tower_mode = False
@@ -133,10 +133,13 @@ class TowerDefense:
             if enemy.checkpoints[-1] == True:
                 self.enemies.remove(enemy)
                 self.stats.health_remaining -= 1
+                self._update_display_boards()
 
             # Check if enemy has zero health and is destroyed
             if enemy.health <= 0:
                 self.enemies.remove(enemy)
+                self.stats.cash += self.settings.tower_kill_value
+                self._update_display_boards()
 
         if self.new_round_started:
             self._generate_enemy(self.stats.level, self.enemy_number)
@@ -267,7 +270,16 @@ class TowerDefense:
             # Check for tower collisions.
             tower_collision = self._check_tower_collisions(tower)
             if tower_collision == False:
-                self.towers.add(tower)
+                if self.stats.cash - self.settings.tower_cost > 0:
+                    self.towers.add(tower)
+                    self.stats.cash = self.stats.cash - self.settings.tower_cost
+                    self._update_display_boards()
+
+
+    def _update_display_boards(self):
+        """Complete all required updates for all display boards."""
+        self.cash_display._prep_msg(self.stats.cash)
+        self.health_display._prep_msg(self.stats.health_remaining)
 
 
     def _check_pixel_color(self, mouse_pos):
@@ -418,6 +430,7 @@ class TowerDefense:
         if self.live_round_mode == False:
             self.start_round_button.draw_button()
         self.cash_display.draw_board()
+        self.health_display.draw_board()
 
 
     
