@@ -6,6 +6,7 @@ from tower import Tower
 from tower_hovers import Tower_Hovers
 from enemy import Enemy
 from bullet import Bullet
+from display_board import Display_Board
 import math
 from game_stats import GameStats
 import time
@@ -36,9 +37,18 @@ class TowerDefense:
         self.map_image = pygame.image.load('images/map.bmp')
         self.map_rect = self.map_image.get_rect()
 
-        # Create the first build tower button
+        # Game Feature Statuses
+        self.enemies_alive = False
+        self.button_clicked = False # Was a button just clicked?
+        self.new_round_started = False # Are we currently starting a new round?
+        self.enemy_number = 1
+        self.enemy_timer = time.time()
+        self.cash = self.settings.starting_cash
+
+        # Create the buttons and display boards
         self.build_tower_button = Button(self, 'images/build_tower.bmp', 650, 850)
         self.start_round_button = Button(self, 'images/start_round.bmp', 850, 850)
+        self.cash_display = Display_Board(self, 0, 800, self.cash)
 
         # Initialize various game modes
         self.build_tower_mode = False
@@ -52,12 +62,6 @@ class TowerDefense:
         # Go get the tower hover images
         self.tower_hovers = Tower_Hovers()
 
-        # Game Feature Statuses
-        self.enemies_alive = False
-        self.button_clicked = False # Was a button just clicked?
-        self.new_round_started = False # Are we currently starting a new round?
-        self.enemy_number = 1
-        self.enemy_timer = time.time()
 
 
 
@@ -413,6 +417,7 @@ class TowerDefense:
         self.build_tower_button.draw_button()
         if self.live_round_mode == False:
             self.start_round_button.draw_button()
+        self.cash_display.draw_board()
 
 
     

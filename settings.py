@@ -15,3 +15,6 @@ class Settings:
 
         # Enemy Settings
         self.enemy_speed = 0.25
+
+        # Player Settings
+        self.starting_cash = "250"
