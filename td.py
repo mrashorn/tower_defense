@@ -45,14 +45,16 @@ class TowerDefense:
         self.enemy_timer = time.time()
 
         # Create the buttons and display boards
-        self.build_tower_button = Button(self, 'images/build_tower.bmp', 650, 850)
-        self.start_round_button = Button(self, 'images/start_round.bmp', 850, 850)
+        self.build_tower_button = Button(self, 'images/build_tower.bmp', 850, 825)
+        self.start_round_button = Button(self, 'images/start_round.bmp', 650, 825)
         self.cash_display = Display_Board(self, 0, 800, self.stats.cash, 1)
         self.health_display = Display_Board(self, 0, 850, self.stats.health_remaining, 2)
+        self.level_display = Display_Board(self, 100, 800, self.stats.level, 3)
 
         # Initialize various game modes
         self.build_tower_mode = False
         self.live_round_mode = False
+        self.display_upgrades_flag = False
 
         # Create the various sprite groups of the game
         self.towers = pygame.sprite.Group()
@@ -61,6 +63,7 @@ class TowerDefense:
 
         # Go get the tower hover images
         self.tower_hovers = Tower_Hovers()
+        self.tower_hovered = False # is the mouse hovering a tower?
 
 
 
@@ -83,20 +86,19 @@ class TowerDefense:
                 sys.exit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
-                # check what mode we are in mode = check_mode(self)
-                # if mode = build tower
-                      # build tower functions (mouse pos)
-                # if mode = live round mode
-                    # clicking during live round (mouse pos)
-                
                 # If we just clicked a button, don't do anything except exit the mode
                 self._check_button_clicked(mouse_pos)
                 if self.button_clicked:
                     continue
 
-
                 if self.build_tower_mode == True:
                     self._build_tower(mouse_pos)
+
+                if self.tower_hovered == True:
+                    print("Start the upgrades!")
+                    self.display_upgrades_flag = True
+                else:
+                    self.display_upgrades_flag = False
 
 
     def _update_game_status(self):
@@ -226,10 +228,6 @@ class TowerDefense:
                     self.bullets.remove(bullet)
                 
 
-        # Damage enemy and delete bullet
-        # In update_enemies - check for 0 health and delete enemy, that will go elsewhere.
-
-
     def _shoot_enemies(self):
         """Detect if enemies need to be shot."""
         for enemy in self.enemies:
@@ -254,8 +252,6 @@ class TowerDefense:
         return dist
 
 
-          
-
     def _build_tower(self, mouse_pos):
         """Build a tower where the user clicked."""
         tower = Tower(self, mouse_pos)
@@ -270,7 +266,7 @@ class TowerDefense:
             # Check for tower collisions.
             tower_collision = self._check_tower_collisions(tower)
             if tower_collision == False:
-                if self.stats.cash - self.settings.tower_cost > 0:
+                if self.stats.cash - self.settings.tower_cost >= 0:
                     self.towers.add(tower)
                     self.stats.cash = self.stats.cash - self.settings.tower_cost
                     self._update_display_boards()
@@ -299,8 +295,6 @@ class TowerDefense:
             if pygame.sprite.collide_rect(tower, placed_tower):
                 return True
         return False
-
-    
 
 
     def _display_tower(self):
@@ -335,7 +329,6 @@ class TowerDefense:
         """Display the range of the tower as you try to place it on map."""
         tower = Tower(self, mouse_pos)
         pygame.draw.circle(self.screen, (255, 255, 255), mouse_pos, tower.range, width=1)
-
 
 
     def _make_green(self, tower_image):
@@ -390,6 +383,7 @@ class TowerDefense:
 
         self.new_round_started = True
         self.stats.level += 1
+        self.level_display._prep_msg(self.stats.level)
         print(f"Starting level {self.stats.level}!")
 
 
@@ -422,6 +416,10 @@ class TowerDefense:
             if pygame.Rect.collidepoint(tower.rect, mouse_pos):
                 # display the tower range.
                 self._display_tower_range(tower.rect.center) # Send tower.rect.center instead of mouse pos
+                self.tower_hovered = True
+
+            else:
+                self.tower_hovered = False
 
 
     def _draw_buttons(self):
@@ -431,6 +429,10 @@ class TowerDefense:
             self.start_round_button.draw_button()
         self.cash_display.draw_board()
         self.health_display.draw_board()
+        self.level_display.draw_board()
+
+        if self.display_upgrades_flag == True:
+            print("We should be drawing the upgrade options!")
 
 
     

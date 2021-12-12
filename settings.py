@@ -13,10 +13,10 @@ class Settings:
         # Tower settings
         self.basic_tower_range = 125
         self.tower_cost = 150
-        self.tower_kill_value = 20
+        self.tower_kill_value = 12
 
         # Enemy Settings
         self.enemy_speed = 0.25
 
         # Player Settings
-        self.starting_cash = 250
+        self.starting_cash = 300
