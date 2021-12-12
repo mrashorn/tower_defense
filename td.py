@@ -47,8 +47,8 @@ class TowerDefense:
         # Create the buttons and display boards
         self.build_tower_button = Button(self, 'images/build_tower.bmp', 650, 850)
         self.start_round_button = Button(self, 'images/start_round.bmp', 850, 850)
-        self.cash_display = Display_Board(self, 0, 800, self.stats.cash)
-        self.health_display = Display_Board(self, 0, 850, self.stats.health_remaining)
+        self.cash_display = Display_Board(self, 0, 800, self.stats.cash, 1)
+        self.health_display = Display_Board(self, 0, 850, self.stats.health_remaining, 2)
 
         # Initialize various game modes
         self.build_tower_mode = False
