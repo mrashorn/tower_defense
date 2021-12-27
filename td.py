@@ -10,6 +10,7 @@ from display_board import Display_Board
 import math
 from game_stats import GameStats
 import time
+from upgrade_buttons import Upgrade_Button
 
 class TowerDefense:
     """Overall class to manage assets and behavior"""
@@ -67,7 +68,6 @@ class TowerDefense:
 
 
 
-
     def run_game(self):
         """Start the main game loop."""
         while True:
@@ -97,6 +97,11 @@ class TowerDefense:
                 if self.tower_hovered == True:
                     print("Start the upgrades!")
                     self.display_upgrades_flag = True
+                    for tower in self.towers:
+                        if tower.rect.collidepoint(mouse_pos):
+                            self.display_upgrades_tower = tower
+
+
                 else:
                     self.display_upgrades_flag = False
 
@@ -432,7 +437,17 @@ class TowerDefense:
         self.level_display.draw_board()
 
         if self.display_upgrades_flag == True:
+            self._draw_upgrade_list(self.display_upgrades_tower)
             print("We should be drawing the upgrade options!")
+
+
+    def _draw_upgrade_list(self, tower):
+        """Draw the tower upgrade list where the mouse clicked on a tower."""
+        # Draw the background of the list
+        upgrade_background = Upgrade_Button(self, tower)
+        upgrade_background.draw_button()
+
+        # Draw each individual upgrade selection based on the tower's flag for that upgrade
 
 
     

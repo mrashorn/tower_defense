@@ -22,3 +22,7 @@ class Tower(Sprite):
         self.range = 100
         self.shoot_timer = time.time()
         self.fire_rate = 1
+
+        # Tower's upgrade attributes for button display purposes.
+        self.faster_fire_rate = False
+        self.longer_range = False
