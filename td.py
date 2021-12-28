@@ -95,7 +95,6 @@ class TowerDefense:
                     self._build_tower(mouse_pos)
 
                 if self.tower_hovered == True:
-                    print("Start the upgrades!")
                     self.display_upgrades_flag = True
                     for tower in self.towers:
                         if tower.rect.collidepoint(mouse_pos):
@@ -438,7 +437,6 @@ class TowerDefense:
 
         if self.display_upgrades_flag == True:
             self._draw_upgrade_list(self.display_upgrades_tower)
-            print("We should be drawing the upgrade options!")
 
 
     def _draw_upgrade_list(self, tower):
