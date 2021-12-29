@@ -13,7 +13,7 @@ class Small_Button:
         self.height = 35
         self.text_color = (255, 255, 255)
         self.button_color = (0, 0, 0)
-        self.font = pygame.font.SysFont(None, 24)
+        self.font = pygame.font.SysFont(None, 20)
         
         # Create the visual offset if we are making the second button.
         lower_button_offset = 0
@@ -21,7 +21,7 @@ class Small_Button:
             lower_button_offset = 40
 
         # build the button's rect and location
-        self.rect = pygame.Rect(big_button.rect.x + 10, 
+        self.rect = pygame.Rect(big_button.rect.x + 15, 
                 big_button.rect.y + 10 + lower_button_offset, self.width, self.height)
 
         # prep the button's text
@@ -62,9 +62,9 @@ class Upgrade_Button:
         self.screen_rect = self.screen.get_rect()
 
         # build the button's dimensions and properties. 
-        self.width = 200
+        self.width = 180
         self.height = 100
-        self.button_color = (30, 30, 30)
+        self.button_color = (0, 0, 0)
         self.font = pygame.font.SysFont(None, 24)
 
         # build the button's rect and location

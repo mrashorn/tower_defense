@@ -96,9 +96,10 @@ class TowerDefense:
 
                 if self.tower_hovered == True:
                     self.display_upgrades_flag = True
-                    for tower in self.towers:
+                    for index, tower in enumerate(self.towers):
                         if tower.rect.collidepoint(mouse_pos):
-                            self.display_upgrades_tower = tower
+                            self.display_upgrades_tower_index = index
+                            print(self.display_upgrades_tower_index)
 
 
                 else:
@@ -368,6 +369,10 @@ class TowerDefense:
         # Check which button we clicked.
         new_tower_clicked = self.build_tower_button.rect.collidepoint(mouse_pos)
         start_round_clicked = self.start_round_button.rect.collidepoint(mouse_pos)
+
+        if self.display_upgrades_flag == True:
+            fire_rate_clicked = self.fire_rate_upgrade_button.rect.collidepoint(mouse_pos)
+            range_clicked = self.range_upgrade_button.rect.collidepoint(mouse_pos)
         
         # Carry out the button functions depending on which button was clicked.
         if new_tower_clicked:
@@ -381,6 +386,29 @@ class TowerDefense:
                 self._start_round()
                 # self.start_round_button.remove_button() 
 
+        if self.display_upgrades_flag == True:
+            for index, tower in enumerate(self.towers):
+                if index == self.display_upgrades_tower_index:
+                    if fire_rate_clicked:
+                        print("Fire Rate Upgraded!")
+                        self._upgrade_tower_fire_rate(tower)
+                    elif range_clicked:
+                        print("Range upgraded!")
+                        self._upgrade_tower_range(tower)
+                    else:
+                        print("No upgrade selected.")
+
+
+    def _upgrade_tower_fire_rate(self, tower):
+        """Upgrade the selected tower's fire rate."""
+        tower.fire_rate *= 2 # double the fire rate
+
+
+    def _upgrade_tower_range(self, tower):
+        """Upgrade the selected tower's firing range."""
+        tower.range *= 2 # double the range
+        print(tower.range)
+        
 
     def _start_round(self):
         """Start the round by spawning enemies based on the current game level."""
@@ -436,14 +464,18 @@ class TowerDefense:
         self.level_display.draw_board()
 
         if self.display_upgrades_flag == True:
-            self._draw_upgrade_list(self.display_upgrades_tower)
+            for index, tower in enumerate(self.towers):
+                if index == self.display_upgrades_tower_index:
+                    self._draw_upgrade_list(tower)
 
 
     def _draw_upgrade_list(self, tower):
         """Draw the tower upgrade list where the mouse clicked on a tower."""
         # Draw the background of the list
-        upgrade_background = Upgrade_Button(self, tower)
-        upgrade_background.draw_button()
+        upgrade_button = Upgrade_Button(self, tower)
+        self.fire_rate_upgrade_button = upgrade_button.fire_rate_button
+        self.range_upgrade_button = upgrade_button.range_button
+        upgrade_button.draw_button()
 
         # Draw each individual upgrade selection based on the tower's flag for that upgrade
 
