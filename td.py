@@ -44,6 +44,7 @@ class TowerDefense:
         self.new_round_started = False # Are we currently starting a new round?
         self.enemy_number = 1
         self.enemy_timer = time.time()
+        self.upgrade_cost = 50
 
         # Create the buttons and display boards
         self.build_tower_button = Button(self, 'images/build_tower.bmp', 850, 825)
@@ -401,12 +402,16 @@ class TowerDefense:
 
     def _upgrade_tower_fire_rate(self, tower):
         """Upgrade the selected tower's fire rate."""
-        tower.fire_rate *= 2 # double the fire rate
+        tower.fire_rate *= 0.5 # double the fire rate
+        self.stats.cash -= self.upgrade_cost
+        self._update_display_boards()
 
 
     def _upgrade_tower_range(self, tower):
         """Upgrade the selected tower's firing range."""
         tower.range *= 2 # double the range
+        self.stats.cash -= self.upgrade_cost
+        self._update_display_boards()
         print(tower.range)
         
 

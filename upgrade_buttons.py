@@ -37,11 +37,11 @@ class Small_Button:
     def _prep_msg(self, upgrade_type):
         """Prep the correct text to be displayed on the button."""
         if upgrade_type == 1:
-            self.msg_image = self.font.render("Increase Fire Rate", True, 
+            self.msg_image = self.font.render("$50: Increase Fire Rate", True, 
                     self.text_color, self.button_color)
 
         if upgrade_type == 2:
-            self.msg_image = self.font.render("Increase Tower Range", True, 
+            self.msg_image = self.font.render("$50: Increase Tower Range", True, 
                     self.text_color, self.button_color)
 
         self.msg_image_rect = self.msg_image.get_rect()
