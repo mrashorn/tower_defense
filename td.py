@@ -328,13 +328,12 @@ class TowerDefense:
             self._make_red(self.tower_hovers.basic_tower_image)            
             
         self.screen.blit(self.tower_hovers.basic_tower_image, self.tower_hovers.basic_tower_rect)
-        self._display_tower_range(mouse_pos)
+        self._display_tower_range(tower)
 
         
-    def _display_tower_range(self, mouse_pos):
+    def _display_tower_range(self, tower):
         """Display the range of the tower as you try to place it on map."""
-        tower = Tower(self, mouse_pos)
-        pygame.draw.circle(self.screen, (255, 255, 255), mouse_pos, tower.range, width=1)
+        pygame.draw.circle(self.screen, (255, 255, 255), tower.rect.center, tower.range, width=1)
 
 
     def _make_green(self, tower_image):
@@ -452,7 +451,7 @@ class TowerDefense:
         for tower in self.towers:
             if pygame.Rect.collidepoint(tower.rect, mouse_pos):
                 # display the tower range.
-                self._display_tower_range(tower.rect.center) # Send tower.rect.center instead of mouse pos
+                self._display_tower_range(tower) 
                 self.tower_hovered = True
 
             else:
